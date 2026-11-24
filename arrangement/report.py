@@ -2,6 +2,7 @@
 import argparse
 import csv
 import json
+import re
 from pathlib import Path
 from statistics import median
 from math import sqrt
@@ -37,7 +38,7 @@ def summarize(folder, first, n):
         rows.append(result)
     keys="seed passed shape placed distinct grounded position_rmse_cm position_max_cm yaw_rms_deg yaw_max_deg failure".split()
     with (folder/"trials.csv").open("w",newline="") as handle:
-        writer=csv.DictWriter(handle,fieldnames=keys,extrasaction="ignore")
+        writer=csv.DictWriter(handle,fieldnames=keys,extrasaction="ignore",lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
     good=[r for r in rows if r["passed"]]
@@ -62,12 +63,31 @@ def summarize(folder, first, n):
             seed=row["seed"]
             lines.append(f"- {name}，种子 [{seed}](seed_{seed}/replay.mp4)，箱心 RMSE {row['position_rmse_cm']:.2f} cm，最大角差 {row['yaw_max_deg']:.2f}°。")
         (folder/"representatives.json").write_text(json.dumps([typical["seed"],difficult["seed"]]))
-    lines+=["","回放按同一条物理轨迹同步重绘九路 RGB-D 和右侧跟拍，每个视频帧展示该时刻可获取的画面。控制算法实际按需取图。末尾切至外部俯视以便检查全字形。","","## 每次运行","",
+    lines+=["","## 放手复查与失败分析",""]
+    for r in rows:
+        if not r["passed"]:
+            lines.append(f"- 种子 {r['seed']}：停止时已登记 {r['placed']} 次摆放，轨迹中对应 {r['distinct']} 个不同箱子，终态有 {r['grounded']} 个箱子落地。停止原因：{r['failure'] or '终态评分超限'}。")
+    logs=[folder/f"{row['seed']}.log" for row in rows]
+    diagnostics=folder/"release-checks.json"
+    if all(path.exists() for path in logs):
+        evidence={}
+        for path in logs:
+            matches=re.findall(r"inspect box (\d+) attempt (\d+) angle ([\d.]+) deg offset ([\d.]+) m",path.read_text())
+            evidence[path.stem]=[dict(box=int(k),attempt=int(t),angle_deg=float(a),offset_m=float(d)) for k,t,a,d in matches]
+        diagnostics.write_text(json.dumps(evidence,indent=2))
+    if diagnostics.exists():
+        checks=[x for run in json.loads(diagnostics.read_text()).values() for x in run]
+        repeats=sum(x["attempt"]>1 for x in checks)
+        lines+=["",f"日志记录了 {len(checks)} 次松手后的视觉复查，其中第 2 次及以后的释放共 {repeats} 次。复查发生在手边，视角内误差和全局对齐后的独立终态误差分别统计。[每次复查读数](release-checks.json)"]
+    lines+=["","## 回放和逐场数据","","回放按同一条物理轨迹同步重绘九路 RGB-D 和右侧跟拍，每个视频帧展示该时刻可获取的画面。控制算法实际按需取图。末尾切至外部俯视以便检查全字形。","","## 每次运行","",
             "|种子|已放 / 不同实体 / 落地|箱心 RMSE (cm)|最远 (cm)|箱边 RMS (°)|最歪 (°)|结果或停止原因|","|---:|---|---:|---:|---:|---:|---|"]
     for r in rows:
         verdict="通过" if r["passed"] else r["failure"] or "终态评分超限，见该种子的 result.json"
         lines.append(f"|{r['seed']}|{r['placed']} / {r['distinct']} / {r['grounded']}|{r['position_rmse_cm']:.2f}|{r['position_max_cm']:.2f}|{r['yaw_rms_deg']:.2f}|{r['yaw_max_deg']:.2f}|{verdict}|")
     lines+=["","中途停止的场次也对现场全部 20 个物体评分，此时数值包含仍散放的箱子。各场保留 result.json 中的逐槽误差、实体分配和搬运记录。[逐场 CSV](trials.csv)","","## 设定、控制与测量","", (Path(__file__).parent.parent/"docs/method.md").read_text().strip(),""]
+    notes=folder/"notes.md"
+    if notes.exists():
+        lines+=["## 本轮讨论与复现","",notes.read_text().strip(),""]
     histogram([r["position_rmse_cm"] for r in complete],folder/"histogram.png")
     (folder/"REPORT.md").write_text("\n".join(lines))
 

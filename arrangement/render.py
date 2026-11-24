@@ -88,7 +88,7 @@ def render(folder, output):
     tmp = output.with_suffix(".partial.mp4")
     command = ["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24",
                "-s", "2560x1440", "-r", str(FPS), "-i", "pipe:0", "-filter_threads", "1",
-               "-c:v", "libx264", "-threads", "3", "-preset", "veryfast", "-crf", "22",
+               "-c:v", "libx264", "-threads", "3", "-preset", "medium", "-crf", "23", "-maxrate", "2600k", "-bufsize", "5000k",
                "-pix_fmt", "yuv420p", "-movflags", "+faststart", str(tmp)]
     process = subprocess.Popen(command, stdin=subprocess.PIPE)
     try:
