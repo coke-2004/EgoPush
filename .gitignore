@@ -1,0 +1,13 @@
+.conda/
+.venv/
+__pycache__/
+*.pyc
+*.so
+tasks/*/results/
+shared/egopush/results/
+benchmarks/
+archive/
+experiments/**/*.log
+experiments/**/trace.npz
+*.bundle
+runs/

@@ -1,0 +1,6 @@
+name: egopush
+channels:
+  - defaults
+dependencies:
+  - python=3.11
+  - pip

@@ -1,0 +1,36 @@
+{
+  "format": 1,
+  "upstreams": {
+    "hommi": {
+      "commit": "2c002aaf211637d1f6fe98331ce3a444e7f57a8b"
+    },
+    "hommi/deps/rby1-wbc": {
+      "commit": "aa9e6aef05af067fe0ca016cda166f8eea668239"
+    },
+    "wuji-description": {
+      "commit": "c2cd7f8d1ef8b6dc8cb907c17daa5a88b4442d95"
+    }
+  },
+  "portable_path_edits": [
+    {
+      "path": "tasks/01_colored_floor_cross/reference/scene.xml",
+      "file_attributes": 130,
+      "original_sha256": "bcc80a8d1ead52bb0311546ea97447eddbf4b34dd174b0674821958846c84790",
+      "portable_sha256": "4733e539774c3005c10f45348ac180ac965cbf55dfc16a050d36a86dd87d76da"
+    },
+    {
+      "path": "tasks/02_identical_floor_cross/reference/scene.xml",
+      "file_attributes": 130,
+      "original_sha256": "53d5bb0aaed1515d629468e9f0283a78d74fbd930cd43229e1337383dd6ea9cb",
+      "portable_sha256": "e81ce7215fcdd5b9b3ccf25bea1145ddc0bd4b7aebbe466867ecff6ec15959f8"
+    },
+    {
+      "path": "tasks/03_identical_cubes_nyu/reference/scene.xml",
+      "file_attributes": 130,
+      "original_sha256": "d9087ea1ac49f1347a87039fee7f491f2e4b3ed1e4bdb5f378c2749e204a5fdc",
+      "portable_sha256": "2866d69ff19b1b44bc08d3d6d4d48aa44948d8029a6f746d6a7599ec6d89136c"
+    }
+  ],
+  "shared_controller_changes": "none; exact 22-file final-run source snapshots",
+  "packaging_changes": "new per-task presets/launchers, relative archive asset paths, documentation"
+}

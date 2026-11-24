@@ -1,0 +1,18 @@
+# Python 3.11 runtime dependency closure from the verified environment.
+# Public PyPI packages only; no editable installs or private repository URLs.
+absl-py==2.5.0
+etils==1.14.0
+fsspec==2026.9.0
+glfw==2.10.2
+imageio==2.38.0
+imageio-ffmpeg==0.6.0
+mujoco==3.14.0
+numpy==2.4.6
+pillow==12.3.0
+pyopengl==3.1.10
+pyyaml==6.0.3
+scipy==1.17.1
+trimesh==5.1.0
+typing-extensions==4.16.0
+websockets==17.1
+zipp==4.1.0
