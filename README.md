@@ -26,6 +26,6 @@ MUJOCO_GL=egl .venv/bin/python -m arrangement runs/demo 10001
 | 更换本体、标定相机或抓取动作 | [RBY1 适配器](arrangement/robot.py) 和 [扩展说明](docs/extension.md) |
 | 更改目标字形 | [米制槽位模板](arrangement/shapes/nyu.json) |
 | 查看物理终态如何评分 | [评分代码](arrangement/metrics.py) |
-| 查看 20 个新种子的结果和代表视频 | [实验报告](experiments/nyu-9800/REPORT.md) |
+| 查看 20 个新种子的结果和代表视频 | [HTML 架构与实验报告](experiments/nyu-9800/REPORT.html) · [逐场结果](experiments/nyu-9800/REPORT.md) |
 
 本地历史研究材料集中在 `archive/legacy/`，保留此前的成片、实现和报告。活动项目直接加载自己的模型和抓取序列。上一轮实验的[逐次结果](docs/baseline/trials.csv)随库保存。第三方资产的版本和许可记录见[来源说明](THIRD_PARTY_NOTICES.md)。
